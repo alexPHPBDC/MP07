@@ -1,0 +1,16 @@
+[
+    {
+        "prova@gmail.com": {
+            "email": "prova@gmail.com",
+            "password": "1234",
+            "name": "aaa"
+        }
+    },
+    {
+        "": {
+            "email": "",
+            "password": "",
+            "name": ""
+        }
+    }
+]
