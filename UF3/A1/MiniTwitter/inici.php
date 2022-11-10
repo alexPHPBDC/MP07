@@ -29,7 +29,6 @@ $svgHeart = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.
 <script type="text/javascript" src="js/logic.js"></script>
 </head>
 <ul>
-    <li><a href="#">Inici</a></li>
     <li><a href="formularis/formulari_tweet.php">Crear Tweet</a></li>
     <li><a id='link-sortir'>Sortir</a></li>
 </ul>
@@ -128,7 +127,7 @@ if (isset($_GET['error'])) {
 
     }
 
-    function ajaxMenuFollow(event) {
+    function ajaxMenuFollow(event,self) {
         event.preventDefault();
         var self = document.getElementById('self').value;
         var usuariAtractar = event.currentTarget.value;
@@ -153,9 +152,8 @@ if (isset($_GET['error'])) {
 
     }
 
-    function ajaxLike(){
+    function ajaxLike(event, self){
         event.preventDefault();
-        var self = document.getElementById('self').value;
         var usuariAtractar = event.currentTarget.value;
         
         var xhttp = new XMLHttpRequest();
@@ -169,18 +167,19 @@ if (isset($_GET['error'])) {
         xhttp.open("POST", "ajax/ajaxProcessarLike.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         
+        var auxId = document.getElementById("usuariAuxId").value;
         var action = event.currentTarget.getAttribute("name");
         if(action == "dislike" ){
-            xhttp.send("dislike="+usuariAtractar+"&self="+self);
+            xhttp.send("dislike="+usuariAtractar+"&self="+self+"&idAux="+auxId);
         }else if(action == "like"){
-            xhttp.send("like="+usuariAtractar+"&self="+self);
+            xhttp.send("like="+usuariAtractar+"&self="+self+"&idAux="+auxId);
         }
 
     }
 
-    function ajaxMyFeed(){
+    function ajaxMyFeed(event,self){
         event.preventDefault();
-        var self = document.getElementById('self').value;
+
         var usuariAtractar = event.currentTarget.value;
         
         var xhttp = new XMLHttpRequest();
@@ -201,7 +200,6 @@ if (isset($_GET['error'])) {
             xhttp.send("idUsuariToUnfollow="+usuariAtractar+"&self="+self);
         }
     }
-
 
     function clickHandle(evt, animalName) {
         let i, tabcontent, tablinks;

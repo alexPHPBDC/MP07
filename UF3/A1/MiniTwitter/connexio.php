@@ -3,7 +3,7 @@ const HOST = "127.0.0.1";
 const DBNAME = "minitwitter";
 const USER = "root";
 const PASSWORD = "patata";
-const PORT = "3306";
+const PORT = "3308";
 
 $link = getLink();
 if ($link == null) {
