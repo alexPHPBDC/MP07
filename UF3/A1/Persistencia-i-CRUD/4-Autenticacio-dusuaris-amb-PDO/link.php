@@ -3,7 +3,7 @@ const HOST = "127.0.0.1";
 const DBNAME = "dwes-alexcalvo-autpdo";
 const USER = "dwes-user";
 const PASSWORD = "dwes-pass";
-const PORT = "3308";
+const PORT = "3306";
 
 $link = getLink();
 
