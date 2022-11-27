@@ -10,7 +10,7 @@ body{
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: #eebf65;
+    background: #eebf65 !important;
 }
 ::selection{
     color: #fff;
@@ -134,7 +134,8 @@ label.selectall .row .percent{
     display: block;
 }
 input[type="radio"],
-input[type="checkbox"]{
+input[type="checkbox"],
+.poll-area button{
     display: none;
 }
 .dog{
@@ -179,4 +180,30 @@ input[type="checkbox"]{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.row{
+    justify-content: center;
+}
+
+#concursants{
+border-bottom: solid 1px black;
+margin-bottom: 26px;
+}
+
+.dogInPhase{
+    display: flex;
+    flex-direction: column;
+}
+
+.resultatFase{
+    display: flex;
+}
+
+.dogInPhase .dog{
+    align-self: center;
+}
+
+.progress{
+    border-radius: unset !important;
 }

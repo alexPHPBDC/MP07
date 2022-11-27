@@ -1,9 +1,10 @@
 <?php
-require_once("classes/Database.php");
-require_once("classes/Dog.php");
-require_once("classes/Phase.php");
-require_once("classes/User.php");
-require_once("dbFunctions.php");
+require_once("../classes/Database.php");
+require_once("../classes/Dog.php");
+require_once("../classes/Phase.php");
+require_once("../classes/User.php");
+require_once("../dbFunctions.php");
+require_once("../utils/utilFunctions.php");
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -25,25 +26,25 @@ require_once("dbFunctions.php");
             <div class="admin-row">
                 <h1> Resultat parcial: Fase 1 </h1>
                 <div class="gossos">
-                    <img class="dog" alt="Musclo" title="Musclo 15%" src="img/g1.png">
-                    <img class="dog" alt="Jingo" title="Jingo 45%" src="img/g2.png">
-                    <img class="dog" alt="Xuia" title="Xuia 4%" src="img/g3.png">
-                    <img class="dog" alt="Bruc" title="Bruc 3%" src="img/g4.png">
-                    <img class="dog" alt="Mango" title="Mango 13%" src="img/g5.png">
-                    <img class="dog" alt="Fluski" title="Fluski 12 %" src="img/g6.png">
-                    <img class="dog" alt="Fonoll" title="Fonoll 5%" src="img/g7.png">
-                    <img class="dog" alt="Swing" title="Swing 2%" src="img/g8.png">
-                    <img class="dog eliminat" alt="Coloma" title="Coloma 1%" src="img/g9.png">
+                    <img class="dog" alt="Musclo" title="Musclo 15%" src="../img/g1.png">
+                    <img class="dog" alt="Jingo" title="Jingo 45%" src="../img/g2.png">
+                    <img class="dog" alt="Xuia" title="Xuia 4%" src="../img/g3.png">
+                    <img class="dog" alt="Bruc" title="Bruc 3%" src="../img/g4.png">
+                    <img class="dog" alt="Mango" title="Mango 13%" src="../img/g5.png">
+                    <img class="dog" alt="Fluski" title="Fluski 12 %" src="../img/g6.png">
+                    <img class="dog" alt="Fonoll" title="Fonoll 5%" src="../img/g7.png">
+                    <img class="dog" alt="Swing" title="Swing 2%" src="../img/g8.png">
+                    <img class="dog eliminat" alt="Coloma" title="Coloma 1%" src="../img/g9.png">
                 </div>
             </div>
             <div class="admin-row">
                 <h1> Nou usuari: </h1>
                 <div id="addUserResponse" class="toast-container"></div>
-                <form id="addUser">
-                    <input type="text" placeholder="Nom" name="username">
-                    <input type="password" placeholder="Contrassenya" name="password">
-                    <input type="submit" value="Crea usuari">
-                </form>
+                <div id="formulariUser">
+                    <?php
+                    echo addUserForm();
+                    ?>
+                </div>
             </div>
             <div class="admin-row">
                 <h1> Fases: </h1>
@@ -106,53 +107,61 @@ require_once("dbFunctions.php");
             </div>
 
             <div class="admin-row">
-                <h1> Concursants: </h1>
+                <h1> Modificar concursants: </h1>
+                <div id="updateDogResponse" class="toast-container"></div>
                 <div id="concursants">
                     <?php
                     $dogs = Dog::getDogsFromDB();
-                    foreach ($dogs as $dog) {
-                    ?>
-                        <form id="f_<?= $dog->id ?>" action="ajaxAdministrarConcursants(this)">
-                            <input type="hidden" name="id" value=<?= $dog->id ?>>
-                            <input type="text" placeholder="Nom" name="name" value=<?= $dog->name ?>>
-                            <input type="text" placeholder="Imatge" name="image" value=<?= $dog->imageUrl ?>>
-                            <input type="text" placeholder="Amo" name="owner" value=<?= $dog->owner ?>>
-                            <input type="text" placeholder="Raça" name="breed" value=<?= $dog->breed ?>>
-                            <input type="button" name="action" value="Modifica">
-                        </form>
-                    <?php
+                    if ($dogs) {
+                        $formularis = UpdateDogForms($dogs);
+                        echo $formularis;
+                    } else {
+                        echo "<h1>No hi ha gossos :)</h1>";
                     }
                     ?>
                 </div>
 
+                <h1> Crear concursants: </h1>
                 <div id="addDogResponse" class="toast-container"></div>
-                <form id="addDog" enctype="multipart/form-data">
-                    <div class="row">
-                        <div class="col-3">
-                            <label class="form-label">Nom
-                                <input type="text" placeholder="Joselito" name="name">
-                            </label>
-                        </div>
-
-                        <div class="col-3"> <label class="form-label">Imatge<input type="file" placeholder="Imatge" name="image"></div></label>
-                        <div class="col-3"> <label class="form-label">Amo<input type="text" placeholder="Amo" name="owner"></div></label>
-                        <div class="col-3"> <label class="form-label">Raça<input type="text" placeholder="Raça" name="breed"></div></label>
-                    </div>
-                    <input class="btn btn-danger float-right" type="submit">
-                </form>
+                <div id="formulariAddDog">
+                    <?php
+                    echo addDogForm();
+                    ?>
+                </div>
             </div>
 
             <div class="admin-row">
                 <h1> Altres operacions: </h1>
-                <form>
+                <?php
+                $phases = Phase::getAllPhases();
+
+                if ($phases) { ?>
+                    <div id="missatgeEsborrarVotsPhase"></div>
                     Esborra els vots de la fase
-                    <input type="number" placeholder="Fase" value="">
-                    <input type="button" value="Esborra">
-                </form>
-                <form>
+                    <form id="esborrarVotsFaseEspecifica">
+                        <select id="selectVotsFases" name="phaseInfo">
+                            <?php
+
+                            foreach ($phases as $phase) {
+                            ?>
+                                <option value='{"id":"<?= $phase->id ?>","phaseNumber":"<?= $phase->phaseNumber ?>"}'><?= $phase->phaseNumber ?></option>
+                            <?php
+                            } ?>
+                        </select>
+
+                        <input type="submit" value="Esborra">
+                    </form>
+                <?php }else{
+                    echo "No hi ha fases :)";
+                } ?>
+
+                <div id="missatgeEsborrarTotsVots"></div>
+                <form id="esborrarTotsVots">
                     Esborra tots els vots
-                    <input type="button" value="Esborra">
+                    <input type="hidden" name="delete" value="true">
+                    <input type="submit" value="Esborra">
                 </form>
+
             </div>
         </div>
     </div>
@@ -162,13 +171,83 @@ require_once("dbFunctions.php");
 </html>
 
 <script>
-    $("#addDog").submit(function(e) {
+    $(document).on('submit', '#esborrarTotsVots', function(e) {
+        e.preventDefault();
+        var actionUrl = "../ajax/ajaxDeleteAllVotes.php";
+        var formData = new FormData(this);
+        var missatges = document.getElementById("missatgeEsborrarTotsVots");
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: formData,
+            success: function(data) {
+                response = JSON.parse(data);
+                if (response['success'].length != 0) {
+                    response['success'].forEach(success => {
+                        missatges.innerHTML = crearToast(success, "success");
+                    })
+                } else if (response['errors'].length != 0) {
+                    response['errors'].forEach(error => {
+                        missatges.innerHTML = crearToast(error, "failure");
+                    })
+                }
+
+
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+
+        deleteToasts(3000);
+
+    });
+
+    $(document).on('submit', '#esborrarVotsFaseEspecifica', function(e) {
+        e.preventDefault();
+        var actionUrl = "../ajax/ajaxDeleteVotesPhase.php";
+
+        var form_data = new FormData();
+        form_data.append("phaseInfo", document.getElementById("selectVotsFases").value);
+
+        var missatges = document.getElementById("missatgeEsborrarVotsPhase");
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: form_data,
+            success: function(data) {
+                response = JSON.parse(data);
+                if (response['success'].length != 0) {
+                    response['success'].forEach(success => {
+                        missatges.innerHTML = crearToast(success, "success");
+                    })
+                } else if (response['errors'].length != 0) {
+                    response['errors'].forEach(error => {
+                        missatges.innerHTML = crearToast(error, "failure");
+                    })
+                }
+
+
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+
+        });
+
+        deleteToasts(3000);
+
+    });
+
+
+    $(document).on('submit', '#addDog', function(e) {
         var missatges = document.getElementById("addDogResponse");
         missatges.innerHTML = "";
         var concursants = document.getElementById("concursants");
+        var formulariDog = document.getElementById("formulariAddDog");
         e.preventDefault();
         var formData = new FormData(this);
-        var actionUrl = "ajax/ajaxAddDog.php";
+        var actionUrl = "../ajax/ajaxAddDog.php";
         $.ajax({
             url: actionUrl,
             type: 'POST',
@@ -180,8 +259,10 @@ require_once("dbFunctions.php");
                     response['success'].forEach(success => {
 
                         missatges.innerHTML = crearToast(success, "success");
-                        concursants.innerHTML = response['concursants'];
+
                     })
+                    formulariDog.innerHTML = response['addDogForm'];
+                    concursants.innerHTML = response['concursants'];
                 } else if (response['errors']) {
                     response['errors'].forEach(error => {
                         console.log(error);
@@ -202,12 +283,13 @@ require_once("dbFunctions.php");
 
     });
 
-    $("#addUser").submit(function(e) {
+    $(document).on('submit', '#addUser', function(e) {
         var missatges = document.getElementById("addUserResponse");
         missatges.innerHTML = "";
         e.preventDefault();
         var formData = new FormData(this);
-        var actionUrl = "ajax/ajaxAddUser.php";
+        var formulariUser = document.getElementById("formulariUser");
+        var actionUrl = "../ajax/ajaxAddUser.php";
         $.ajax({
             url: actionUrl,
             type: 'POST',
@@ -219,6 +301,7 @@ require_once("dbFunctions.php");
                     response['success'].forEach(success => {
                         missatges.innerHTML = crearToast(success, "success");
                     })
+                    formulariUser.innerHTML = response['addUserForm'];
                 } else if (response['errors']) {
                     response['errors'].forEach(error => {
                         missatges.innerHTML = crearToast(error, "failure");
@@ -236,6 +319,43 @@ require_once("dbFunctions.php");
 
     });
 
+    function ajaxUpdateDog(idFormulariDog) {
+        var missatges = document.getElementById("updateDogResponse");
+        missatges.innerHTML = "";
+        var concursants = document.getElementById("concursants");
+        var formData = new FormData(document.getElementById(idFormulariDog));
+        console.log(formData);
+        var actionUrl = "../ajax/ajaxUpdateDog.php";
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: formData,
+            success: function(data) {
+                response = JSON.parse(data);
+
+                if (response['success'].length != 0) {
+                    response['success'].forEach(success => {
+                        missatges.innerHTML = crearToast(success, "success");
+                    })
+                    concursants.innerHTML = response['concursants'];
+                } else if (response['errors'].length != 0) {
+                    response['errors'].forEach(error => {
+                        missatges.innerHTML = crearToast(error, "failure");
+                    })
+                }
+
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+
+        //Delete toasts after 3 seconds
+        deleteToasts(3000);
+    }
+
+
+
     function deleteToasts(nSeconds) {
         setTimeout(function() {
             const toasts = Array.from(document.getElementsByClassName('toast'));
@@ -248,15 +368,16 @@ require_once("dbFunctions.php");
     }
 
     function crearToast(missatge, codi) {
-        var imatgeURL = "assets/tick.png";
+        var imatgeURL = "../assets/tick.png";
         var titol = "TOT CORRECTE";
 
         if (codi == "failure") {
-            imatgeURL = "assets/cross.png";
+            imatgeURL = "../assets/cross.png";
             titol = "ERROR";
         }
+
         var htmlString = `
-    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" style="position: fixed; top: 50%; left:40%;">
     <div class="toast-header">
       <img style="width:24px;" src="${imatgeURL}" class="rounded me-2" alt="...">
       <strong class="me-auto">${titol}</strong>

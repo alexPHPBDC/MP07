@@ -21,4 +21,6 @@ class User
         $query->bindParam(2, $this->password);
         return $query->execute();
     }
+
+    
 }
