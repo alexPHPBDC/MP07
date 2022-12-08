@@ -17,8 +17,10 @@ class Dog
         $this->breed = $breed;
     }
     
-
-
+    /**
+     * Gets dog's image from database
+     * @return The dog's image or false if Database is Offline / No image was found
+     */
     function getDogImageDB(): string | bool
     {
         $connection = Database::getInstance()->getConnection();
@@ -34,6 +36,10 @@ class Dog
         return false;
     }
 
+    /**
+     * Updates a dog on database
+     * @return True on success, false on failure
+     */
     function updateDogDB(): bool
     {
         $connection = Database::getInstance()->getConnection();
@@ -48,6 +54,10 @@ class Dog
         return $query->execute();
     }
 
+     /**
+     * Inserts a dog on database
+     * @return True on success, false on failure
+     */
     function insertToDB(): bool
     {
         $connection = Database::getInstance()->getConnection();
@@ -61,24 +71,31 @@ class Dog
         return $query->execute();
     }
 
+    /**
+     * Gets all dogs from database
+     * @return Array of Dogs or false on failure
+     */
     static function getDogsFromDB(): array | bool
     {
         $connection = Database::getInstance()->getConnection();
         if (!$connection) return false;
 
-        $dogs = array();
         $query = $connection->prepare("SELECT `id`,`name`,`image`,`owner`,`breed` FROM dog");
         $query->execute();
         $query->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Dog');
         return $query->fetchAll();
     }
 
-    static function getDogFromDB($id): Dog | false
+    /**
+     * Gets dog from database
+     * @param string $id The dog's id
+     * @return The dog's image or false if no image was found
+     */
+    static function getDogFromDB(string $id): Dog | bool
     {
         $connection = Database::getInstance()->getConnection();
         if (!$connection) return false;
 
-        $dogs = array();
         $query = $connection->prepare("SELECT `id`,`name`,`image`,`owner`,`breed` FROM dog WHERE id=?");
         $query->bindParam(1, $id);
         $query->execute();

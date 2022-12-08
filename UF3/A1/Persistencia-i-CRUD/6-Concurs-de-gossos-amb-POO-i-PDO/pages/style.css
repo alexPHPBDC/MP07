@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+
 *{
     margin: 0;
     padding: 0;
@@ -194,10 +196,13 @@ margin-bottom: 26px;
 .dogInPhase{
     display: flex;
     flex-direction: column;
+
 }
 
 .resultatFase{
     display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .dogInPhase .dog{
@@ -206,4 +211,21 @@ margin-bottom: 26px;
 
 .progress{
     border-radius: unset !important;
+}
+
+.resultatFase.partial{
+width: 100%;
+}
+
+.resultatFase.partial h6{
+text-align: center;
+}
+
+.admin-row.votsParcials{
+
+}
+
+#esborrarVotsFaseEspecifica{
+    display: inline-block;
+    margin-bottom: 21px;
 }
