@@ -10,7 +10,6 @@ require_once("../classes/Database.php");
 require_once("../classes/Dog.php");
 require_once("../classes/Phase.php");
 require_once("../classes/User.php");
-require_once("../dbFunctions.php");
 require_once("../utils/utilFunctions.php");
 require_once("../classes/Vote.php");
 require_once("../classes/PhaseContestants.php");

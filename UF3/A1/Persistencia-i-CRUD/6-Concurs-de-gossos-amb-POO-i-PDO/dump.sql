@@ -93,7 +93,6 @@ CREATE TABLE `phasecontestants` (
 
 LOCK TABLES `phasecontestants` WRITE;
 /*!40000 ALTER TABLE `phasecontestants` DISABLE KEYS */;
-INSERT INTO `phasecontestants` VALUES (455,1),(456,1),(457,1),(458,1),(459,1),(460,1),(461,1),(462,1),(455,2),(456,2),(457,2),(458,2),(460,2),(461,2),(462,2),(455,3),(456,3),(457,3),(458,3),(461,3),(462,3),(455,4),(456,4),(457,4),(458,4),(462,4),(455,5),(456,5),(458,5),(462,5),(455,6),(456,6),(462,6),(455,7),(456,7),(455,8);
 /*!40000 ALTER TABLE `phasecontestants` ENABLE KEYS */;
 UNLOCK TABLES;
 
