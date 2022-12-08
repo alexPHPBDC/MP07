@@ -132,7 +132,7 @@ function uploadImage($image, $target_file)
         $errors[] = "El teu fitxer no s'ha penjat :(";
         // if everything is ok, try to upload file
     } else {
-        if (move_uploaded_file($image["tmp_name"], $target_file)) {
+        if (copy($image["tmp_name"], $target_file)) {
         } else {
             $errors[] = "Hi ha hagut un error penjant l'imatge.";
         }
