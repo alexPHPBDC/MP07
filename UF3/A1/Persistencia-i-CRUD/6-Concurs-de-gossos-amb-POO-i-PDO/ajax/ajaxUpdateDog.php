@@ -41,7 +41,7 @@ if (isset($_POST['id']) && isset($_POST['name']) && isset($_FILES['image']) && i
                     $dog->name = $name;
                     $dog->owner = $owner;
                     $dog->breed = $breed;
-
+                    
                     if ($dog->updateDogDB()) {
                         $response['success'][] = "Usuari modificat correctament.";
                         $dogs = Dog::getDogsFromDB();
@@ -56,7 +56,7 @@ if (isset($_POST['id']) && isset($_POST['name']) && isset($_FILES['image']) && i
 
                 //todo ADD IT so that can be modified
             } catch (PDOException $e) {
-                $response['errors'][] = "Usuari ja creat";
+                $response['errors'][] = "Error en la base de dades";
             }
         }
     }

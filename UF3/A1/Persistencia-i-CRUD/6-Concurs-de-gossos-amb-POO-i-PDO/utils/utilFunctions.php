@@ -132,7 +132,7 @@ function uploadImage($image, $target_file)
         $errors[] = "El teu fitxer no s'ha penjat :(";
         // if everything is ok, try to upload file
     } else {
-        if (copy($image["tmp_name"], $target_file)) {
+        if (move_uploaded_file($image["tmp_name"], $target_file)) {
         } else {
             $errors[] = "Hi ha hagut un error penjant l'imatge.";
         }
@@ -234,7 +234,7 @@ function calcularResultatGossos($date)
 
                         //Si hi ha un empat, em quedo amb els 8 - $phaseNumber que tinguin més vots totals
                         $mostVotedDogs = PhaseContestants::getMostVotedDogs($i - 1);
-                        if($i == 1){
+                        if ($i == 1) {
                             $mostVotedDogs = PhaseContestants::getMostVotedDogsOfFirstPhase();
                         }
 
@@ -249,7 +249,7 @@ function calcularResultatGossos($date)
                             } else {
                                 // echo "<h1>A COMPETIL</h1>";
                                 //He de fer que els que tenen aquest numero de vots competeixin, i se'n va un random
-                                
+
                                 //$nVotesRepes = $mostVotedDogs[count($mostVotedDogs) - 1]; //Per exemple, 0 vots
                                 $desempatadors = array();
                                 $noBarallen = array();
@@ -257,11 +257,11 @@ function calcularResultatGossos($date)
                                 foreach ($mostVotedDogs as $dog) {
                                     if ($dog['votes'] == $valueVotsEmpata) {
                                         $desempatadors[] = $dog;
-                                    }else {
+                                    } else {
                                         $noBarallen[] = $dog;
                                     }
                                 }
-                                
+
                                 $numeroRandom = rand(0, count($desempatadors) - 1);
                                 array_splice($desempatadors, $numeroRandom, 1);
 
@@ -272,11 +272,6 @@ function calcularResultatGossos($date)
                                 foreach ($desempatadors as $dog) {
                                     $winners[$dog['id']] = new Dog($dog['id'], $dog['name'], $dog['image']);
                                 }
-                               
-                               
-
-
-
                             }
                         }
                     } else {
@@ -392,7 +387,7 @@ function getStringTotesLesPhases($date)
             al <input disabled type='date' placeholder='Fi' value='$phase->endDate'>
             
             </form>";
-            } else {
+            } else if (Phase::hasStarted($date, $phase->phaseNumber)) {
                 $dataIniciStatus = "enabled";
                 $inputAmagat = "";
                 if ($counter == 0) {
@@ -407,6 +402,15 @@ function getStringTotesLesPhases($date)
             <input type='hidden' name='phaseNumber' value='$phase->phaseNumber'>
         Fase <input type='text' name='phaseNumber' value='$phase->phaseNumber' disabled style='width: 3em'>
         del <input $dataIniciStatus type='date' name='startDate' placeholder='Inici' value='$phase->startDate'>
+        al <input type='date' placeholder='Fi' name='endDate' value='$phase->endDate'>
+        <input type='button' name='fphase-$phase->phaseNumber' value='Modifica' onclick='ajaxModifyPhaseDate(this.name)'>
+        </form>";
+            } else {
+                $string .= "<form id='fphase-$phase->phaseNumber' class='fase-row'>
+            <input type='hidden' name='date' value='$date'>
+            <input type='hidden' name='phaseNumber' value='$phase->phaseNumber'>
+        Fase <input type='text' name='phaseNumber' value='$phase->phaseNumber' disabled style='width: 3em'>
+        del <input type='date' name='startDate' placeholder='Inici' value='$phase->startDate'>
         al <input type='date' placeholder='Fi' name='endDate' value='$phase->endDate'>
         <input type='button' name='fphase-$phase->phaseNumber' value='Modifica' onclick='ajaxModifyPhaseDate(this.name)'>
         </form>";

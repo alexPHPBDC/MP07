@@ -126,6 +126,33 @@ class Phase
     }
 
     /**
+     * Checks if phase has started on given date
+     * @param string $date 
+     * @param string $phaseNumber
+     * @return boolean 
+     */
+    static function hasStarted(string $date, string $phaseNumber){
+        $connection = Database::getInstance()->getConnection();
+        if (!$connection) return false;
+
+        $query = $connection->prepare("SELECT DATE(?) >= startDate as 'hasStarted'  from phase where phaseNumber=?");
+        $query->bindParam(1,$date);
+        $query->bindParam(2,$phaseNumber);
+        $query->execute();
+        
+        $row = $query->fetch();
+        if ($row) {
+            return $row['hasStarted'];
+        }
+        return false;
+
+
+    }
+    
+
+
+
+    /**
      * Checks if date is after given phase
      * @param string $date 
      * @param string $phaseNumber

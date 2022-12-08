@@ -21,16 +21,37 @@ if (isset($_POST['endDate']) && isset($_POST['startDate']) && isset($_POST['phas
     }else if($startDate >= $endDate){
         $response['errors'][] = "La data d'inici a de ser menor a la data de fi";
     }else{
+        $phaseAnterior = $phaseNumber - 1 < 0 ? $phaseNumber : $phaseNumber - 1;
+        $phasePosterior = $phaseNumber + 1 > 8 ? $phaseNumber : $phaseNumber + 1;
+        
+        if($phaseNumber - 1 <=0){
+            if(Phase::dateIsBeforePhase($endDate,$phaseNumber + 1)){
+                Phase::changeDate($startDate,$endDate,$phaseNumber);
+                $response['success'][] = "Dades cambiades!";
+            }else{
+                $response['errors'][] = "Dades solapades, selecciona una altra dada";
+            }
+        }else if($phaseNumber +1 >8){
+            if(Phase::dateIsAfterPhase($endDate,$phaseNumber - 1)){
+                Phase::changeDate($startDate,$endDate,$phaseNumber);
+                $response['success'][] = "Dades cambiades!";
+            }else{
+                $response['errors'][] = "Dades solapades, selecciona una altra dada";
+            }
 
-        if(Phase::dateIsAfterPhase($startDate,$phaseNumber-1) && Phase::dateIsBeforePhase($endDate,$phaseNumber+1)){
-
-            Phase::changeDate($startDate,$endDate,$phaseNumber);
-            $response['success'][] = "Dades cambiades!";
         }else{
-
-            $response['errors'][] = "Dades solapades, selecciona una altra dada";
-
+            if(Phase::dateIsAfterPhase($startDate,$phaseAnterior) && Phase::dateIsBeforePhase($endDate,$phasePosterior)){
+                Phase::changeDate($startDate,$endDate,$phaseNumber);
+                $response['success'][] = "Dades cambiades!";
+            
+            }else{
+    
+                $response['errors'][] = "Dades solapades, selecciona una altra dada";
+               
+            }
         }
+
+
 
     }
 

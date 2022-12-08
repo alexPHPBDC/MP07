@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `dog`;
 CREATE TABLE `dog` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `image` varchar(45) NOT NULL,
+  `image` varchar(100) NOT NULL,
   `owner` varchar(45) NOT NULL,
   `breed` varchar(45) NOT NULL,
   PRIMARY KEY (`id`)
