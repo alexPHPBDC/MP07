@@ -134,7 +134,7 @@ function uploadImage($image, $target_file)
     } else {
         $errors[] = $image["tmp_name"];
         $errors[] = $target_file;
-        if (move_uploaded_file($image["tmp_name"], $target_file)) {
+        if (copy($image["tmp_name"], $target_file)) {
         } else {
             $errors[] = "Hi ha hagut un error penjant l'imatge.";
         }
