@@ -192,7 +192,6 @@ function ajaxUpdateDog(idFormulariDog) {
     missatges.innerHTML = "";
     var concursants = document.getElementById("concursants");
     var formData = new FormData(document.getElementById(idFormulariDog));
-    console.log(formData);
     var actionUrl = "../ajax/ajaxUpdateDog.php";
     $.ajax({
         url: actionUrl,
