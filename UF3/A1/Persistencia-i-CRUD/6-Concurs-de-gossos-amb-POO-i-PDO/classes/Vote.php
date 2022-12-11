@@ -96,24 +96,24 @@ class Vote
             return false;
         }
 
-        $query = $connection->prepare("SELECT dog.id,phase.id,dog.name as dogName,dog.image as dogImage,
+        $query = $connection->prepare("SELECT dog.id,dog.name as dogName,dog.image as dogImage,
         count(dog.Id)/
         (select count(*) from vote JOIN phase ON vote.idPhase = phase.id WHERE phase.phaseNumber = ?) as 'votePercentage' FROM vote
         INNER JOIN phase ON phase.id = vote.idPhase 
         INNER JOIN dog ON vote.idDog = dog.id 
         WHERE phase.phaseNumber = ?
-        GROUP BY dog.id,phase.id
+        GROUP BY dog.id
         
         union
         
-        (select dog.id,phase.id,dog.name,dog.image,0 from dog INNER JOIN phasecontestants ON phasecontestants.idDog = dog.id INNER JOIN phase ON phasecontestants.idPhase = phase.id 
+        (select dog.id,dog.name,dog.image,0 from dog INNER JOIN phasecontestants ON phasecontestants.idDog = dog.id INNER JOIN phase ON phasecontestants.idPhase = phase.id 
         WHERE dog.id 
         IN (SELECT phasecontestants.idDog From phasecontestants 
         INNER JOIN phase ON phasecontestants.idPhase = phase.id WHERE phaseNumber = ?) 
         AND dog.id NOT IN
         (SELECT dog.id FROM dog INNER JOIN vote ON vote.idDog = dog.id INNER JOIN phase ON vote.idPhase = phase.id WHERE phase.phaseNumber = ?)
-        AND phase.phaseNumber = ?
-        GROUP BY dog.id,phase.id
+        
+        GROUP BY dog.id
         )");
     
         $previousPhaseNumber = $phaseNumber -1;
