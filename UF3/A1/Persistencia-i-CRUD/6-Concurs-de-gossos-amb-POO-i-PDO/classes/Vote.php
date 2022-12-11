@@ -121,7 +121,6 @@ class Vote
         $query->bindParam(2, $phaseNumber);
         $query->bindParam(3, $previousPhaseNumber);
         $query->bindParam(4, $phaseNumber);
-        $query->bindParam(5, $phaseNumber);
         $query->execute();
         return $query->fetchAll();
     }
