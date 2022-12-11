@@ -214,35 +214,26 @@ function calcularResultatGossos($date)
             if (!$currentPlayers) { //Si en aquesta fase no hi ha guanyadors, els he de generar
                 $winners = array();
                 $dogVotes = PhaseContestants::getVotedDogsOfPhase($i); //Pillo els gossos amb els seus vots.
+                if($i==1){$dogVotes = PhaseContestants::getVotedDogsOfFirstPhase($i);}
+                
                 $nWinners = 9 - $i;
-                echo "<br> Ronda $i ,nWinners es $nWinners";
+              
                 if ($dogVotes) {
 
                     $vots = array();
                     $empat = false;
-                    $valueVotsEmpataAux = null;
-                    $valueVotsEmpata = null;
-                    $counter = 0;
                     foreach ($dogVotes as $voteValue) {
+                     
                         if (isset($vots[$voteValue['votes']])) {
                             $empat = true;
-                            $valueVotsEmpataAux = $voteValue['votes'];
-
-                            if($counter == 0){
-                                $valueVotsEmpata = $valueVotsEmpataAux;
-                                $counter++;
-                            }
-
-                            if($valueVotsEmpataAux < $valueVotsEmpata){
-                                $valueVotsEmpata = $valueVotsEmpataAux;
-                            }
+                            break;
                         } else {
                             $vots[$voteValue['votes']] = true;
                         }
                     }
 
                     if ($empat) {
-
+                        
                         //Si hi ha un empat, em quedo amb els 8 - $phaseNumber que tinguin més vots totals
                         $mostVotedDogs = PhaseContestants::getMostVotedDogs($i - 1);
                         if ($i == 1) {
@@ -250,28 +241,54 @@ function calcularResultatGossos($date)
                         }
 
 
-                        //Si no tinc prous winners, miro els que tenen més vots d'entre els participants de la fase
+                        //Miro els que tenen més vots d'entre els participants de la fase
                         if ($mostVotedDogs) {
-
-                            if (isset($mostVotedDogs[count($mostVotedDogs) - 2]['vote']) && $mostVotedDogs[count($mostVotedDogs) - 1]['vote'] != $mostVotedDogs[count($mostVotedDogs) - 2]['vote']) { //Si l'últim i el penúltim no tenen el mateix número de vots, trec l'últim (el menys votat) i jasta
-                                for ($j = 0; $j < 8 - $i; $j++) {
+                            //Si l'últim i el penúltim no tenen el mateix número de vots, trec l'últim (el menys votat) i jasta
+                            if (isset($mostVotedDogs[count($mostVotedDogs) - 2]['votes']) && $mostVotedDogs[count($mostVotedDogs) - 1]['votes'] != $mostVotedDogs[count($mostVotedDogs) - 2]['votes']) {
+                               
+                                for ($j = 0; $j < 9 - $i; $j++) {
                                     $winners[$mostVotedDogs[$j]['id']] = new Dog($mostVotedDogs[$j]['id'], $mostVotedDogs[$j]['name'], $mostVotedDogs[$j]['image']);
                                 }
-                            } else {
-                                //He de fer que els que tenen aquest numero de vots competeixin, i se'n va un random
+                             
+                            } else { //He de fer que els que empaten en vots competeixin, i se'n va un random
 
-                                
+                                $vots = array();
+
+                                $valueVotsEmpataAux = null;
+                                $valueVotsEmpata = null;
+                                $counter = 0;
+                                foreach ($mostVotedDogs as $voteValue) {
+                                    
+                                    if (isset($vots[$voteValue['votes']])) {
+                                        $empat = true;
+                                        $valueVotsEmpataAux = $voteValue['votes'];
+
+                                        if ($counter == 0) {
+                                            $valueVotsEmpata = $valueVotsEmpataAux;
+                                            $counter++;
+                                        }
+
+                                        if ($valueVotsEmpataAux < $valueVotsEmpata) {
+                                            $valueVotsEmpata = $valueVotsEmpataAux;
+                                        }
+                                    } else {
+                                        $vots[$voteValue['votes']] = true;
+                                    }
+                                }
+
                                 $desempatadors = array();
                                 $noBarallen = array();
-                                echo "<br>ValueVotsEmpata val $valueVotsEmpata";
+                               
                                 foreach ($mostVotedDogs as $dog) {
+                                   
                                     if ($dog['votes'] == $valueVotsEmpata) {
                                         $desempatadors[] = $dog;
                                     } else {
                                         $noBarallen[] = $dog;
                                     }
                                 }
-
+                              
+                               
                                 $numeroRandom = rand(0, count($desempatadors) - 1);
                                 array_splice($desempatadors, $numeroRandom, 1);
 
@@ -299,7 +316,7 @@ function calcularResultatGossos($date)
 
 
                     if (count($winners) != $nWinners) { //Si no tinc prous winners encara, els pillo random. Aqui no hauria d'entrar mai.
-                        echo "<br>He entrat 302";
+                       
                         if ($i == 1) { //Si he de pillar randoms a la primera fase, els agafo de tots els gossos
                             $randomDogs = Dog::getDogsFromDB();
                         } else { //Altrament agafo els que van guanyar anteriorment(Osigui els participants actuals)
@@ -308,7 +325,7 @@ function calcularResultatGossos($date)
 
 
                         while (count($winners) < $nWinners) { //Anem afegint gossos random
-                            //echo "<h3>".count($winners)."</h3>";
+                           
                             $randomNumber = rand(0, count($randomDogs) - 1);
 
                             if (count($winners) >= $nWinners) {
@@ -436,14 +453,14 @@ function getStringTotesLesPhases($date)
 
 function paginaFiConcurs()
 {
-    $paginaFi = `
+    $paginaFi = '
     <!DOCTYPE html>
     <html lang="ca">
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Votació popular Concurs Internacional de Gossos d'Atura 2023</title>
+        <title>Votació popular Concurs Internacional de Gossos d\'Atura 2023</title>
         <link rel="stylesheet" href="style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -453,7 +470,7 @@ function paginaFiConcurs()
 
     <body>
         <div class="wrapper">
-            <header>Votació popular del Concurs Internacional de Gossos d'Atura 2023- FINALITZAT </span></header>
+            <header>Votació popular del Concurs Internacional de Gossos d\'Atura 2023- FINALITZAT </span></header>
             <p> Mostra els <a href="resultats.php">resultats</a> de les fases anteriors.</p>
         </div>
 
@@ -461,7 +478,6 @@ function paginaFiConcurs()
 
     </html>
 
-`;
-
-return $paginaFi;
+';
+    return $paginaFi;
 }

@@ -58,24 +58,23 @@ class PhaseContestants
         WHERE dog.id
         IN
         (SELECT phasecontestants.idDog FROM phasecontestants INNER JOIN dog ON phasecontestants.idDog = dog.id INNER JOIN phase ON phasecontestants.idPhase = phase.id where phase.phaseNumber = ?)
-        AND dog.id
-        NOT IN
-        (SELECT vote.idDog from vote WHERE vote.idPhase = ?)
+        
         GROUP BY dog.id
         
         UNION
 
         SELECT 0,dog.id,dog.image,dog.name FROM dog 
-        WHERE dog.id NOT IN ( SELECT dog.id FROM vote INNER JOIN dog ON dog.id = vote.idDog)
-		AND dog.id IN
+        WHERE dog.id IN
         (SELECT phasecontestants.idDog FROM phasecontestants WHERE phasecontestants.idPhase = ?)
-        ORDER BY votes ASC
+        AND dog.id
+        NOT IN
+        (SELECT vote.idDog from vote)
+        ORDER BY votes DESC
     ");
 
         $phaseActual = $phaseAnterior + 1;
         $query->bindParam(1, $phaseAnterior);
-        $query->bindParam(2, $phaseActual);
-        $query->bindParam(3, $phaseAnterior);
+        $query->bindParam(2, $phaseAnterior);
         $query->execute();
         $rows = $query->fetchAll();
 
@@ -106,7 +105,7 @@ class PhaseContestants
 
         SELECT 0,dog.id,dog.image,dog.name FROM dog 
         WHERE dog.id NOT IN ( SELECT dog.id FROM vote INNER JOIN dog ON dog.id = vote.idDog)
-        ORDER BY votes ASC
+        ORDER BY votes DESC
     ");
 
         $query->execute();
@@ -119,6 +118,40 @@ class PhaseContestants
         }
 
         return $dogs;
+    }
+
+    static function getVotedDogsOfFirstPhase($phaseNumber){
+        $connection = Database::getInstance()->getConnection();
+        if (!$connection) {
+            return false;
+        }
+
+        $query = $connection->prepare("
+        select dog.name,dog.image,dog.id,count(sessionID) as 'votes' FROM vote INNER JOIN dog ON vote.idDog = dog.id INNER JOIN phase ON phase.id = vote.idPhase WHERE phase.phaseNumber = ? GROUP BY dog.id
+
+        UNION
+
+        SELECT dog.name,dog.image,dog.id,0 FROM dog       
+        WHERE dog.id
+        NOT IN (
+        SELECT dog.id FROM vote INNER JOIN dog ON vote.idDog = dog.id INNER JOIN phase ON phase.id = vote.idPhase WHERE phase.phaseNumber = ? 
+        )
+        ORDER BY votes DESC");
+
+
+        $dogs = array();
+        $query->bindParam(1, $phaseNumber);
+        $query->bindParam(2, $phaseNumber);
+        $query->execute();
+        $rows = $query->fetchAll();
+        foreach ($rows as $row) {
+            $dog = array("votes" => $row['votes'], "id" => $row['id'], "image" => $row['image'], "name" => $row['name']);
+            $dogs[] = $dog;
+        }
+
+        return $dogs;
+
+
     }
 
 
@@ -135,17 +168,21 @@ class PhaseContestants
 
         UNION
 
-        SELECT dog.name,dog.image,dog.id,0 FROM dog 
-        WHERE dog.id NOT IN (
+        SELECT dog.name,dog.image,dog.id,0 FROM dog       
+        WHERE dog.id IN 
+        (SELECT dog.id from dog INNER JOIN phasecontestants ON phasecontestants.idDog = dog.id INNER JOIN phase ON phase.id = phasecontestants.idPhase where phase.phaseNumber = ?)
+        AND dog.id
+        NOT IN (
         SELECT dog.id FROM vote INNER JOIN dog ON vote.idDog = dog.id INNER JOIN phase ON phase.id = vote.idPhase WHERE phase.phaseNumber = ? 
         )
-        ORDER BY votes ASC");
+        ORDER BY votes DESC");
 
 
-
+            $phaseAnterior = $phaseNumber-1;
         $dogs = array();
         $query->bindParam(1, $phaseNumber);
-        $query->bindParam(2, $phaseNumber);
+        $query->bindParam(2, $phaseAnterior);
+        $query->bindParam(3, $phaseNumber);
         $query->execute();
         $rows = $query->fetchAll();
         foreach ($rows as $row) {
