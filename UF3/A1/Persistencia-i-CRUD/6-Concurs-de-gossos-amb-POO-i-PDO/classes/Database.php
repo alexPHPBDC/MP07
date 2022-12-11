@@ -3,9 +3,9 @@ class Database
 {
     private $host = "127.0.0.1";
     private $dbname = "concursgossos";
-    private $user = "root";
+    private $user = "alex";
     private $password = "patata";
-    private $port = "3308";
+    private $port = "3306";
 
     // Hold the class instance.
     private static $instance = null;
