@@ -102,7 +102,7 @@ class Vote
         INNER JOIN phase ON phase.id = vote.idPhase 
         INNER JOIN dog ON vote.idDog = dog.id 
         WHERE phase.phaseNumber = ?
-        GROUP BY dog.id
+        GROUP BY dog.id,phase.id
         
         union
         
@@ -112,7 +112,8 @@ class Vote
         INNER JOIN phase ON phasecontestants.idPhase = phase.id WHERE phaseNumber = ?) 
         AND dog.id NOT IN
         (SELECT dog.id FROM dog INNER JOIN vote ON vote.idDog = dog.id INNER JOIN phase ON vote.idPhase = phase.id WHERE phase.phaseNumber = ?)
-        GROUP BY dog.id
+        AND phase.phaseNumber = ?
+        GROUP BY dog.id,phase.id
         )");
     
         $previousPhaseNumber = $phaseNumber -1;
@@ -120,6 +121,7 @@ class Vote
         $query->bindParam(2, $phaseNumber);
         $query->bindParam(3, $previousPhaseNumber);
         $query->bindParam(4, $phaseNumber);
+        $query->bindParam(5, $phaseNumber);
         $query->execute();
         return $query->fetchAll();
     }
