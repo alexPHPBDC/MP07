@@ -106,7 +106,7 @@ class PhaseContestants
 
         SELECT 0,dog.id,dog.image,dog.name FROM dog 
         WHERE dog.id NOT IN ( SELECT dog.id FROM vote INNER JOIN dog ON dog.id = vote.idDog)
-        ORDER BY votes DESC
+        ORDER BY votes ASC
     ");
 
         $query->execute();

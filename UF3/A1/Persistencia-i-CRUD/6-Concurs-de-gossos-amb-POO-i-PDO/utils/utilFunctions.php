@@ -215,7 +215,7 @@ function calcularResultatGossos($date)
                 $winners = array();
                 $dogVotes = PhaseContestants::getVotedDogsOfPhase($i); //Pillo els gossos amb els seus vots.
                 $nWinners = 9 - $i;
-
+                echo "<br> Ronda $i ,nWinners es $nWinners";
                 if ($dogVotes) {
 
                     $vots = array();
@@ -263,7 +263,7 @@ function calcularResultatGossos($date)
                                 
                                 $desempatadors = array();
                                 $noBarallen = array();
-
+                                echo "<br>ValueVotsEmpata val $valueVotsEmpata";
                                 foreach ($mostVotedDogs as $dog) {
                                     if ($dog['votes'] == $valueVotsEmpata) {
                                         $desempatadors[] = $dog;
@@ -299,7 +299,7 @@ function calcularResultatGossos($date)
 
 
                     if (count($winners) != $nWinners) { //Si no tinc prous winners encara, els pillo random. Aqui no hauria d'entrar mai.
-
+                        echo "<br>He entrat 302";
                         if ($i == 1) { //Si he de pillar randoms a la primera fase, els agafo de tots els gossos
                             $randomDogs = Dog::getDogsFromDB();
                         } else { //Altrament agafo els que van guanyar anteriorment(Osigui els participants actuals)

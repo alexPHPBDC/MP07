@@ -83,8 +83,10 @@ if (Database::getInstance()->getConnection()) {
 
 <?php
                 }else{
-
+                    echo "No hi ha jugadors disponibles";
                 }
+            }else{
+                echo "No hi ha fase disponible";
             }
         }
     } else {
