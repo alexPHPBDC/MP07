@@ -228,7 +228,7 @@ function calcularResultatGossos($date)
                             $empat = true;
                             $valueVotsEmpataAux = $voteValue['votes'];
 
-                            if($counter = 0){
+                            if($counter == 0){
                                 $valueVotsEmpata = $valueVotsEmpataAux;
                                 $counter++;
                             }
