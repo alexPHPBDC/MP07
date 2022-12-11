@@ -195,6 +195,7 @@ function h2DataActual($date)
 {
     return "<h2 style='text-align:center'>Data actual: $date</h2>";
 }
+
 srand(63636661);
 function calcularResultatGossos($date)
 {
@@ -219,12 +220,22 @@ function calcularResultatGossos($date)
 
                     $vots = array();
                     $empat = false;
+                    $valueVotsEmpataAux = null;
                     $valueVotsEmpata = null;
+                    $counter = 0;
                     foreach ($dogVotes as $voteValue) {
                         if (isset($vots[$voteValue['votes']])) {
                             $empat = true;
-                            $valueVotsEmpata = $voteValue['votes'];
-                            break;
+                            $valueVotsEmpataAux = $voteValue['votes'];
+
+                            if($counter = 0){
+                                $valueVotsEmpata = $valueVotsEmpataAux;
+                                $counter++;
+                            }
+
+                            if($valueVotsEmpataAux < $valueVotsEmpata){
+                                $valueVotsEmpata = $valueVotsEmpataAux;
+                            }
                         } else {
                             $vots[$voteValue['votes']] = true;
                         }
@@ -247,10 +258,9 @@ function calcularResultatGossos($date)
                                     $winners[$mostVotedDogs[$j]['id']] = new Dog($mostVotedDogs[$j]['id'], $mostVotedDogs[$j]['name'], $mostVotedDogs[$j]['image']);
                                 }
                             } else {
-                                // echo "<h1>A COMPETIL</h1>";
                                 //He de fer que els que tenen aquest numero de vots competeixin, i se'n va un random
 
-                                //$nVotesRepes = $mostVotedDogs[count($mostVotedDogs) - 1]; //Per exemple, 0 vots
+                                
                                 $desempatadors = array();
                                 $noBarallen = array();
 
