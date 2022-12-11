@@ -436,7 +436,7 @@ function getStringTotesLesPhases($date)
 
 function paginaFiConcurs()
 {
-    echo `
+    $paginaFi = `
     <!DOCTYPE html>
     <html lang="ca">
 
@@ -462,4 +462,6 @@ function paginaFiConcurs()
     </html>
 
 `;
+
+return $paginaFi;
 }
