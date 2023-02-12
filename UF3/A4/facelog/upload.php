@@ -23,8 +23,8 @@ if (isset($_FILES['imageupload']) && isset($_POST['today']) && isset($_POST['dat
 
         if (is_gd_image($imatgeTractada)) {
 
-            $target_filePath =  plugin_dir_path(__FILE__) . "uploads/treated/" . $userID . "-" . $date;
-            $target_fileUrl =  plugin_dir_url(__FILE__) . "uploads/treated/" . $userID . "-" . $date;
+            $target_filePath =  plugin_dir_path(__FILE__) . "uploads/treated/" . $userID . "-" . basename($image["name"]);
+            $target_fileUrl =  plugin_dir_url(__FILE__) . "uploads/treated/" . $userID . "-" . basename($image["name"]);
 
             //Em posa l'imatge tractada al path especificat, és com un move
             imagejpeg($imatgeTractada, $target_filePath);
