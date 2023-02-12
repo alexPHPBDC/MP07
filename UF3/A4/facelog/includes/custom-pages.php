@@ -13,9 +13,9 @@ function facelog_gallery(): string
         'widthDesitjada' => '400',
         'velocitatGaleria' => '1000',
     ]);
-    $widthDesitjada = $options['widthDesitjada'];
-    $heightDesitjada = $options['heightDesitjada'];
-    $velocitatGaleria = $options['velocitatGaleria'];
+    $widthDesitjada = $options['widthDesitjada'] ?? '700';
+    $heightDesitjada = $options['heightDesitjada'] ?? '400';
+    $velocitatGaleria = $options['velocitatGaleria'] ?? '1000';
 
     $output = "<div class='facelog_gallery'>";
 

@@ -66,8 +66,8 @@ function treatImage(string $target_file): GdImage | array
         'heightDesitjada' => '700',
         'widthDesitjada' => '400',
     ]);
-    $widthDesitjada = $options['widthDesitjada'];
-    $heightDesitjada = $options['heightDesitjada'];
+    $widthDesitjada = $options['widthDesitjada'] ?? '700';
+    $heightDesitjada = $options['heightDesitjada'] ?? '400';
     $gdImage = imagecreatefromjpeg($target_file);
     $data = getImageDataFromAPI($target_file);
 
@@ -88,10 +88,21 @@ function treatImage(string $target_file): GdImage | array
 
 
                     $gdImage = imagerotate($gdImage, $rotationAngleDegrees, 0);
-                    $gdImage = imagecrop($gdImage, ['x' => $iniciCropX, 'y' => $iniciCropY, 'width' => $distanciaEntreUlls * 3, 'height' => $distanciaEntreUlls * 4]);
-                    $gdImage = imagescale($gdImage, $widthDesitjada, $heightDesitjada);
-
-                    return $gdImage;
+                    if ($gdImage) {
+                        $gdImage = imagecrop($gdImage, ['x' => $iniciCropX, 'y' => $iniciCropY, 'width' => $distanciaEntreUlls * 3, 'height' => $distanciaEntreUlls * 4]);
+                        if ($gdImage) {
+                            $gdImage = imagescale($gdImage, $widthDesitjada, $heightDesitjada);
+                            if ($gdImage) {
+                                return $gdImage;
+                            } else {
+                                return ['error' => "No s\'ha pogut escalar l\'imatge"];
+                            }
+                        } else {
+                            return ['error' => "No s\'ha pogut retallar l\'imatge"];
+                        }
+                    } else {
+                        return ['error' => "No s\'ha pogut rotar l\'imatge"];
+                    }
                 } else {
                     return ['error' => $data['error']];
                 }

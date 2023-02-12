@@ -12,7 +12,7 @@ global $wpdb;
 $imageTable = $wpdb->base_prefix . "facelog_image";
 $usersTable = $wpdb->base_prefix.'users'; 
 $sql = $wpdb->prepare("
-SELECT relative_path as image, updated_at as 'date' FROM $imageTable AS imatges 
+SELECT relative_path as image, date as 'date' FROM $imageTable AS imatges 
 INNER JOIN $usersTable AS usuaris
 ON usuaris.ID = imatges.userID AND usuaris.user_login =%s",$user_login);
 return $wpdb->get_results($sql);

@@ -115,7 +115,7 @@ function facelog_deletePages():void
 
 function facelog_deleteOptions():void 
 {
-   delete_option( 'facelog_options' );
+   delete_option('facelog_options');
 }
 
 function facelog_createGalleryPage():void

@@ -11,6 +11,11 @@ class Punt
         $this->y = $y;
     }
 
+    /**
+     * Donat un vector, calcula el seu mòdul
+     * @param Punt 
+     * @return float
+     */
     static function calcularModulVector(Punt $vector): float
     {
         $vectorAB = sqrt(pow(($vector->x), 2) + pow(($vector->y), 2));
@@ -18,6 +23,12 @@ class Punt
     }
 
 
+    /**
+     * Donat dos punts, calcula el seu vector
+     * @param Punt $A Primer punt
+     * @param Punt $B Segon punt
+     * @return Punt
+     */
     static function calcularVector(Punt $A, Punt $B): Punt
     {
         $vectorAB = new Punt(($B->x - $A->x), ($B->y - $A->y));
@@ -26,12 +37,25 @@ class Punt
     }
 
 
+    /**
+     * Donat dos punts, calcula el seu producte escalar
+     * @param Punt
+     * @param Punt
+     * @return float
+     */
     static function producteEscalar(Punt $vector1, Punt $vector2): float
     {
         return (($vector1->x * $vector2->x) + ($vector1->y * $vector2->y));
     }
 
-
+    /**
+     * Rota un punt
+     * @param Punt $punt a rotar
+     * @param int $image_width llargada de l'imatge
+     * @param int $image_height llargada de l'imatge
+     * @param float $angle a rotar
+     * @return Punt
+     */
     static function rotarPunt(Punt $punt, int $image_width, int $image_height, float $angle):Punt
     {
         // Calculem quan mesura la imatge rotada
@@ -59,10 +83,23 @@ class Punt
         return new Punt($rotated_x, $rotated_y);
     }
 
+    /**
+     * Donat dos punts, calcula la distància entre ells
+     * @param Punt
+     * @param Punt
+     * @return float
+     */
     static function getDistanciaEntreUlls(Punt $ullEsquerra,Punt $ullDreta):float{
         return sqrt(pow(abs($ullDreta->x - $ullEsquerra->x), 2) + pow($ullDreta->y - $ullEsquerra->y, 2));
     }
 
+    /**
+     * Donat tres punts, troba el punt central
+     * @param Punt
+     * @param Punt
+     * @param Punt
+     * @return Punt
+     */
     static function obtenirPuntCentral(Punt $ullEsquerra, Punt $ullDreta, Punt $nas):Punt
     {
         $centreX = new Punt((($ullDreta->x - $ullEsquerra->x) / 2), $ullDreta->y);
@@ -70,6 +107,14 @@ class Punt
         return $centre;
     }
 
+    /**
+     * Obté la posició inicial des d'on es farà el crop
+     * @param Punt
+     * @param float
+     * @param float
+     * @param float
+     * @return Punt
+     */
     static function obtenirIniciCrop(Punt $centre, float $escalat, float $widthActual, float $heightActual):Punt
     {
         $x = ($centre->x - ($widthActual / 2) * $escalat);
