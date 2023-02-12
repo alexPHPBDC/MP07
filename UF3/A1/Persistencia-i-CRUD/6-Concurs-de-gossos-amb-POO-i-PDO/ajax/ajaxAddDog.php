@@ -16,7 +16,7 @@ if (isset($_POST['name']) && isset($_FILES['image']) && isset($_POST['owner']) &
         $response['errors'][] = "Falten camps per emplenar";
     } else {
 
-        $target_file = "../img/" . $name . "-" . basename($image["name"]);
+        $target_file = "/var/www/html/MP07/UF3/A1/Persistencia-i-CRUD/6-Concurs-de-gossos-amb-POO-i-PDO/img/" . $name . "-" . basename($image["name"]);
         //Si no hi ha errors i m'han cambiat la imatge, la pujo.
 
 
