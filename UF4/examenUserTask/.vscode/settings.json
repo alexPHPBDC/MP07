@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "connection",
+            "database": "${workspaceFolder:maquinesExpenedoresApi}/database.sqlite"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

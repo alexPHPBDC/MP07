@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "dadada",
+            "database": "${workspaceFolder:UF4}/examen/examen.sqlite"
+        }
+    ]
+}
